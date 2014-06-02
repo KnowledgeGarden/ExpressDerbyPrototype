@@ -4,7 +4,7 @@
  * instance is a representation of, a proxy for a <em>subject</em></p>
  */
 function SubjectProxy() {
-	this.properties = new [];
+	this.properties = {};
 }
 ///////////////////////////////////////////////
 // Subject Identity:
@@ -47,7 +47,7 @@ SubjectProxy.prototype.getNodeType = function() {
 SubjectProxy.prototype.addSuperClassLocator = function(superClassLocator) {
 	var sups = this.properties['subOf'];
 	if (!sups)
-		sups = new [];
+		sups = new Array();
 	var where = sups.indexOf(superClassLocator);
 	if (where < 0) {
 		sups.push(superClassLocator);
@@ -67,6 +67,56 @@ SubjectProxy.prototype.isA = function(locator) {
 	return (where > -1);
 };
 /////////////////////////////////////////////////
+// Text data
+/////////////////////////////////////////////////
+SubjectProxy.prototype.addLabel = function(label, language) {
+	var lan = language;
+	if (!lan)
+		lan = 'en'; // default
+	var key = makeLanguageLabel(lan);
+
+	var lx = this.properties[key];
+	if (!lx)
+		lx = new [];
+	lx.push(label);
+	this.properties[key] = lx;
+};
+SubjectProxy.prototype.addDetails = function(details,language) {
+	var lan = language;
+	if (!lan)
+		lan = 'en'; // default
+	var key = makeLanguageDetails(lan);
+	var lx = this.properties[key];
+	if (!lx)
+		lx = new Array();
+	lx.push(details);
+	this.properties[key] = lx;
+	
+};
+SubjectProxy.prototype.listLabels = function(language) {
+	var lan = language;
+	if (!lan)
+		lan = 'en'; // default
+	return this.properties[makeLanguageLabel(lan)];
+};
+SubjectProxy.prototype.listDetails = function(language) {
+	var lan = language;
+	if (!lan)
+		lan = 'en'; // default
+	return this.properties[makeLanguageDetails(lan)];
+};
+
+function makeLanguageLabel(language) {
+	if (language === 'en')
+		return 'label';
+	return 'label'+language;
+}
+function makeLanguageDetails(language) {
+	if (language === 'en')
+		return 'details';
+	return 'details'+language;
+}
+/////////////////////////////////////////////////
 // Other properties
 /////////////////////////////////////////////////
 SubjectProxy.prototype.setResourceUrl = function(url) {
@@ -75,42 +125,9 @@ SubjectProxy.prototype.setResourceUrl = function(url) {
 SubjectProxy.prototype.getResourceUrl = function() {
 	return this.properties['url'];
 };
-SubjectProxy.prototype.addLabel = function(label, language) {
-	var lan = language;
-	if (!lan)
-		lan = 'en'; // default
-	var lx = this.properties['label',lan];
-	if (!lx)
-		lx = new [];
-	lx.push(label);
-	this.properties['label',lan] = lx;
-};
-SubjectProxy.prototype.addDetails = function(details,language) {
-	var lan = language;
-	if (!lan)
-		lan = 'en'; // default
-	var lx = this.properties['details',lan];
-	if (!lx)
-		lx = new [];
-	lx.push(details);
-	this.properties['details',lan] = lx;
-	
-};
-SubjectProxy.prototype.listLabels = function(language) {
-	var lan = language;
-	if (!lan)
-		lan = 'en'; // default
-	return this.properties['label',lan];
-};
-SubjectProxy.prototype.listDetails = function(language) {
-	var lan = language;
-	if (!lan)
-		lan = 'en'; // default
-	return this.properties['details',lan];
-};
+
 SubjectProxy.prototype.toJSON = function() {
-	//TODO
-	return 'test:foo';
+	return JSON.stringify(this.properties);
 };
 
 module.exports = SubjectProxy;

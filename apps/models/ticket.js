@@ -4,43 +4,42 @@
  * <p>For guests, we create an empty Ticket with username = guest and no credentials.</p>
  * @param User can be <code>null</code>
  */
+var properties = {
+		'username' : '',
+		'handle' : '',
+		'image' : '',
+		'avatar' : '',
+		'credentials' : []
+};
 function Ticket(user) {
-	if (!user) {
-		this.username = null;
-		this.handle= null;
-		this.image = null;
-		this.avatar = null;
-		this.credentials = null;
-	} else {
-		this.username = user.getUserName();
-		this.handle= user.getHandle();
-		this.image = user.getImage();
-		this.avatar = user.getAvatar();
-		this.credentials = user.listCredentials;
-	}
+	if (user) {
+		properties.username = user.getUserName();
+		properties.handle= user.getHandle();
+		properties.image = user.getImage();
+		properties.avatar = user.getAvatar();
+		properties.credentials = user.listCredentials;
+	} 
 }
 Ticket.prototype.getUserName = function() {
-	return this.username;
+	return properties.username;
 };
 Ticket.prototype.getHandle = function() {
-	return this.handle;
+	return properties.handle;
 };
 Ticket.prototype.getImage = function() {
-	return this.image;
+	return properties.image;
 };
 Ticket.prototype.getAvatar = function() {
-	return this.avatar;
+	return properties.avatar;
 };
 Ticket.prototype.hasCredential = function(credential) {
-	var cx = this.credentials;
-	if (!cx)
-		return false;
+	var cx = properties.credentials;
 	var has = cx.indexOf(credential);
 	return (has > -1);
 
 };
 Ticket.prototype.listCredentials = function() {
-	return this.credentials;
+	return properties.credentials;
 };
 
 
