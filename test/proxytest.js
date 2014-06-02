@@ -10,3 +10,6 @@ proxy.setNodeType("FancyNode");
 proxy.addSuperClassLocator('MySuper');
 
 console.log(proxy.toJSON());
+
+//Returned:
+// {"locator":"MyTestProxy","instanceOf":"FancyNode","subOf":["MySuper"]}
