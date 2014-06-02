@@ -6,12 +6,69 @@
 function SubjectProxy() {
 	this.properties = new [];
 }
+///////////////////////////////////////////////
+// Subject Identity:
+//   Based on several components:
+//      A LOCATOR which is a unique identifier in the database
+//      Location in a taxonomy:
+//			Type (instanceOf)
+//			SuperClass (subclassOf)
+//			Relations  (links to Tuples)
+///////////////////////////////////////////////
+// A Tuple is a SubjectProxy which forms the equivalent
+//  of a TRIPLE:
+//		{subject, predicate, object}
+///////////////////////////////////////////////
+/**
+ * A <code>locator</code> is a <em>UUID</em> for this
+ * object; it is an identifier.
+ * @param locator
+ */
 SubjectProxy.prototype.setLocator =function(locator) {
 		this.properties['locator']=locator;
 };
 SubjectProxy.prototype.getLocator = function() {
 		return this.properties['locator'];
 };
+////////////////////////////////////////////////
+// Taxonomy
+//   Transitive Closure is a list of all parents "up the tree"
+//     from this topic.  Maintaining that lest allows us to
+//     answer an "isA" question without multiple databaes calls
+//   TransitiveClosure is modeled as properties['transitiveClosure'] list
+////////////////////////////////////////////////
+SubjectProxy.prototype.setNodeType = function(typeLocator) {
+	this.properties['instanceOf'] = typeLocator;
+	//TODO: deal with transitive closure
+};
+SubjectProxy.prototype.getNodeType = function() {
+	return this.properties['instanceOf'];
+};
+SubjectProxy.prototype.addSuperClassLocator = function(superClassLocator) {
+	var sups = this.properties['subOf'];
+	if (!sups)
+		sups = new [];
+	var where = sups.indexOf(superClassLocator);
+	if (where < 0) {
+		sups.push(superClassLocator);
+		this.properties['subOf'] = sups;
+	}
+	//TODO: deal with transitive closure
+};
+SubjectProxy.prototype.listSuperClassLocators = function () {
+	return this.properties['subOf'];
+};
+
+SubjectProxy.prototype.isA = function(locator) {
+	var tclist = this.properties['transitiveClosure'];
+	if (!tclist)
+		return false;
+	var where = tclist.indexOf(locator);
+	return (where > -1);
+};
+/////////////////////////////////////////////////
+// Other properties
+/////////////////////////////////////////////////
 SubjectProxy.prototype.setResourceUrl = function(url) {
 	this.properties['url'] = url;
 };

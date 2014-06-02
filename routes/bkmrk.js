@@ -7,7 +7,7 @@
             
  *   encodeURIComponent(document.title)
  */
-var bkmrk = require('../apps/models/bkmrk/index'); // /index
+var bkmrk = require('../apps/models/bookmarkmodel'); // /index
 var bookmark = bkmrk;
 
 exports.bkmrk = function(req, res){

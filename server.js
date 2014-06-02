@@ -17,8 +17,10 @@ var myCollection = mongoDB.collection(collection_name);
 var dataProvider = require('./apps/models/dataprovider');
 var userDataProvider = require('./apps/models/userdataprovider');
 //models
-var bkmrkModel = require('./apps/models/bkmrk/index');
+var bkmrkModel = require('./apps/models/bookmarkmodel');
 var userModel = require('./apps/models/usermodel');
+var adminModel = require('./apps/models/adminmodel');
+var tagModel = require('./apps/models/tagmodel');
 
 var app = express();
 var exphbs = require('express3-handlebars');
@@ -42,6 +44,8 @@ dataProvider.init(mongoDB,myCollection);
 bkmrkModel.init(dataProvider);
 userDataProvider.init(mongoDB,myCollection);
 userModel.init(userDataProvider);
+adminModel.init(userDataProvider);
+tagModel.init(dataProvider);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
