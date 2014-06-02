@@ -1,5 +1,6 @@
 /**
- * New node file
+ * User
+ * A class for representing Authenticated Users
  */
 function User() {
 	this.username = null;

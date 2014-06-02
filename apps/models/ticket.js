@@ -1,7 +1,8 @@
 /**
- * Ticket; a server object for carrying user information around in sessions
- * We do not keep the <code>user</code> around for safety
- * @param User
+ * <p>Ticket; a server object for carrying user information around in sessions
+ * We do not keep the <code>user</code> around for safety.</p>
+ * <p>For guests, we create an empty Ticket with username = guest and no credentials.</p>
+ * @param User can be <code>null</code>
  */
 function Ticket(user) {
 	if (!user) {

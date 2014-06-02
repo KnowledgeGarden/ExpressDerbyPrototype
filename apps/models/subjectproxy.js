@@ -1,5 +1,7 @@
 /**
  * SubjectProxy
+ * <p>A class which serves the purpose of <em>knowledge representation</em>; each
+ * instance is a representation of, a proxy for a <em>subject</em></p>
  */
 function SubjectProxy() {
 	this.properties = new [];
