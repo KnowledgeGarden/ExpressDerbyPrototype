@@ -47,30 +47,3 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-
-/**
- * nifty router, but how to tie it into app?
- */
-function onRequestReceived(request, response) {
-  console.log('Request in');
-
-  var parsed_url = url.parse(request.url, true);
-
-  console.log(parsed_url);
-
-  switch (parsed_url.pathname) {
-    case '/':
-      home.index;
-      break;
-    case '/admin':
-      admin/admin;
-      break
-    case '/users':
-      user.list;
-      break;
-    default:
-      response.writeHead(200, {'Content-Type': 'text/plain'});
-      response.end('NodeJS server is working' + "\n");
-      break;
-  }
-}
