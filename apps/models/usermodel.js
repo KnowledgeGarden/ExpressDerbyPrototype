@@ -1,5 +1,5 @@
 /**
- * New node file
+ * UserModel
  */
 var userDataProvider;
 var User = require('./user');
@@ -9,4 +9,5 @@ var UserModel = module.exports = {
 			userDataProvider = udp;
 			console.log("UserModel init "+userDataProvider);
 		}
+//TODO
 }

@@ -1,61 +1,60 @@
 /**
- * New node file
+ * User
+ * A class for representing Authenticated Users
  */
+var properties = {
+		'username' : '',
+		'handle' : '',
+		'image' : '',
+		'avatar' : '',
+		'password' : '',
+		'credentials' : []
+};
 function User() {
-	this.username = null;
-	this.handle= null;
-	this.image = null;
-	this.avatar = null;
-	this.password = null;
-	this.credentials = null;
 }
 
 User.prototype.setUserNameAndPassword = function(username,password) {
-	this.username = username;
-	this.password = password;
+	properties.username = username;
+	properties.password = password;
 };
 User.prototype.getUserName = function() {
-	return this.username;
+	return properties.username;
 };
 User.prototype.getPassword = function() {
-	return password;
+	return properties.password;
 };
 User.prototype.setHandle = function(handle) {
-	this.handle = handle;
+	properties.handle = handle;
 };
 User.prototype.getHandle = function() {
-	return this.handle;
+	return properties.handle;
 };
 User.prototype.setImage = function(image) {
-	this.image = image;
+	properties.image = image;
 };
 User.prototype.getImage = function() {
-	return this.image;
+	return properties.image;
 };
 User.prototype.setAvatar = function(avatar) {
-	this.avatar = avatar;
+	properties.avatar = avatar;
 };
 User.prototype.getAvatar = function() {
-	return this.avatar;
+	return properties.avatar;
 };
 User.prototype.addCredential = function(credential) {
-	var cx = this.credentials;
-	if (!cx)
-		cx = new [];
+	var cx = properties.credentials;
 	var has = cx.indexOf(credential);
 	if (has === -1)
 		cx.push(credential);
 };
 User.prototype.hasCredential = function(credential) {
-	var cx = this.credentials;
-	if (!cx)
-		return false;
+	var cx = properties.credentials;
 	var has = cx.indexOf(credential);
 	return (has > -1);
 
 };
 User.prototype.removeCredential = function(credential) {
-	var cx = this.credentials;
+	var cx = properties.credentials;
 	if (cx) {
 		var where = cx.indexOf(credential);
 		if (where > -1)
@@ -64,10 +63,9 @@ User.prototype.removeCredential = function(credential) {
 
 };
 User.prototype.listCredentials = function() {
-	return this.credentials;
+	return properties.credentials;
 };
 User.prototype.toJSON = function() {
-	//TODO
-	return 'test:foo';
+	return JSON.stringify(properties);
 };
 module.exports = User;

@@ -13,12 +13,13 @@ var DataProvider = module.exports = {
 	        	myCollection = collection;
 	        	console.log('Initializing DataProvider '+mongoDB);
 		},
-		getProxy: function(lox) {
+		getProxy: function(lox, credentials) {
 			var result = new ReturnObject();
 			myCollection.find({locator:lox}, function(err,doc) {
-				if (doc) 
+				if (doc) {
+					//TODO check credentials
 					result.setObject(doc);
-				else
+				} else
 					result.addErrorString(err.toString());
 			});
 			return result;
