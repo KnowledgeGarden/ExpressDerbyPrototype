@@ -56,15 +56,15 @@ User.prototype._init = function _init(properties) {
   }
   if (! this._password.salt) this._password.salt = this._salt(512);
 
-  this.__defineSetter__('password', this.setPassword);
-  this.__defineGetter__('password', this.getPasswordHash);
+  this.__defineGetter__('password', this._getPasswordHash);
+  this.__defineSetter__('password', this._setPassword);
 };
 
-User.prototype.getPasswordHash = function getPasswordHash() {
+User.prototype._getPasswordHash = function _getPasswordHash() {
   return this._password;
 };
 
-User.prototype.setPassword = function setPassword(pass) {
+User.prototype._setPassword = function _setPassword(pass) {
   var user = this;
   function onPassword(err, derivedKey) {
     if (err) return user.emit('err', err);
