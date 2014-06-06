@@ -6,7 +6,6 @@
  * <li>User invitation list: emails of users if invitations required</li>
  * <li>...,/li></ul></p>
  */
-var ReturnObject = require('./returnobject');
 
 var userDataProvider;
 

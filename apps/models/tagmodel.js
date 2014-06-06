@@ -6,7 +6,6 @@
  * <li>Fetch tags based on the tag string</li>
  * <li>...,/li></ul></p>
  */
-var ReturnObject = require('./returnobject');
 
 var dataProvider;
 
@@ -20,9 +19,9 @@ var dataProvider;
 	 * 
 	 * @param tagString
 	 * @param credentials : Ticket
-	 * @returns {ResultObject}
+	 * @param callback: signature (err,data)
 	 */
-	findOrCreateTag: function(tagString, credentials) {
+	findOrCreateTag: function(tagString, credentials, callback) {
 		var result = getTagByTagString(tagString,credentials);
 		if (!result.getObject()) {
 			var lox = tagStringToLocator(tagString);
@@ -37,10 +36,12 @@ var dataProvider;
 	 * 
 	 * @param tagSting
 	 * @param credentials: Ticket
+	 * @param callback: signature (err,data)
 	 */
-	getTagByTagString: function(tagSting, credentials) {
+	getTagByTagString: function(tagSting, credentials, callback) {
 		var lox = tagStringToLocator(tagString);
-		return dataProvider.getProxy(lox,credentials);
+		//TODO change to callbacks
+		var result = dataProvider.getProxy(lox,credentials);
 	}
   	
   };
