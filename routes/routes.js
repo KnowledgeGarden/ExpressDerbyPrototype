@@ -47,13 +47,9 @@ module.exports = function(app, passport) {
 	// show the login form
 	app.get('/login', login.login);
 	// process the login form
-	app.post('/login', passport.authenticate('basic'), function(req, res) {
-		if (err) {
-			console.log("LOGIN ERR: "+err);
-			res.redirect('/login');
-		} else
+	app.post('/login', passport.authenticate('local'), function(req, res) {
 			res.redirect('/');
-	});
+	}); 
 	
 /*	app.post('/login',
 			  passport.authenticate('basic', { successRedirect: '/',
@@ -74,14 +70,14 @@ module.exports = function(app, passport) {
 	    	homepage : req.body.homepage,
 	    	password : req.body.password //TODO storing raw password
 	    	}), req.body.password, function(err, account) {
-	        if (err) {
-	        	console.log("ROUTE ERROR "+err);
-	            return res.render('signup', { account : account });
-	        }
+    			console.log("routes.signup "+err);
+	        	if (err) {
+	        		return res.render('signup', { account : account });
+	        	}
 
-	        passport.authenticate('basic')(req, res, function () {
+	      //  passport.authenticate('local')(req, res, function () {
 	          res.redirect('/');
-	        });
+	       // });
 	    });
 		
 	});

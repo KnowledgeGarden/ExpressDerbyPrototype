@@ -32,8 +32,9 @@ var express = require('express')
 var connect = require('connect');
 var passport = require('passport')
 	, Account = require('./apps/models/account')
-    , BasicStrategy = require('passport-http').BasicStrategy;
-passport.use(new BasicStrategy(function(username,password,done){
+	, LocalStrategy = require('passport-local');
+   // , BasicStrategy = require('passport-http').BasicStrategy;
+passport.use(new LocalStrategy(function(username,password,done){
     console.log(username+"//"+password+" is trying to login as local.");
     Account.findOne({'username':username})
         .exec(function(err,puser){
@@ -44,10 +45,19 @@ passport.use(new BasicStrategy(function(username,password,done){
             }
             console.log(puser);
             console.log(puser.username+' '+puser.password);
-            if (password!==puser.password) {
-            	console.log("password invalid. "+puser.password);
-                return done(null, false, { message: 'Invalid password' });
-            }
+            Account.comparePassword(password, function(err, isMatch) {
+            	console.log('A '+err);
+                if (err) return done(err);
+                if(isMatch) {
+                  return done(null, Account);
+                } else {
+                  return done(null, false, { message: 'Invalid password' });
+                }
+              });
+            //if (password!==puser.password) {
+            //	console.log("password invalid. "+puser.password);
+            //    return done(null, false, { message: 'Invalid password' });
+            //}
             return done(null, puser);
     });
 }));
