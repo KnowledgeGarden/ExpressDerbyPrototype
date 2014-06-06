@@ -42,8 +42,10 @@ passport.use(new BasicStrategy(function(username,password,done){
             	console.log("user not found.");
                 return done(null, false, { message: 'Unknown user ' + username });
             }
+            console.log(puser);
+            console.log(puser.username+' '+puser.password);
             if (password!==puser.password) {
-            	console.log("password invalid.");
+            	console.log("password invalid. "+puser.password);
                 return done(null, false, { message: 'Invalid password' });
             }
             return done(null, puser);

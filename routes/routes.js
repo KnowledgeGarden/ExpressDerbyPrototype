@@ -71,7 +71,8 @@ module.exports = function(app, passport) {
 	    	fullname : req.body.fullname,
 	    	handle   : req.body.handle,
 	    	avatar : req.body.avatar,
-	    	homepage : req.body.homepage
+	    	homepage : req.body.homepage,
+	    	password : req.body.password //TODO storing raw password
 	    	}), req.body.password, function(err, account) {
 	        if (err) {
 	        	console.log("ROUTE ERROR "+err);
