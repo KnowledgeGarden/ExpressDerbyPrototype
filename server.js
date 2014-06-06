@@ -31,7 +31,7 @@ var express = require('express')
 
 var connect = require('connect');
 var passport = require('passport')
-	, Account = require('./apps/models/account')
+	, Account = require('./apps/models/account').Strategy
 	, LocalStrategy = require('passport-local');
    // , BasicStrategy = require('passport-http').BasicStrategy;
 passport.use(new LocalStrategy(function(username,password,done){
