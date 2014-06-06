@@ -47,19 +47,19 @@ module.exports = function(app, passport) {
 	// show the login form
 	app.get('/login', login.login);
 	// process the login form
-//	app.post('/login', passport.authenticate('local'), function(req, res) {
-//		if (err) {
-//			console.log("LOGIN ERR: "+err);
-//			res.redirect('/login');
-//		} else
-//			res.redirect('/');
-//	});
+	app.post('/login', passport.authenticate('basic'), function(req, res) {
+		if (err) {
+			console.log("LOGIN ERR: "+err);
+			res.redirect('/login');
+		} else
+			res.redirect('/');
+	});
 	
-	app.post('/login',
-			  passport.authenticate('local', { successRedirect: '/',
+/*	app.post('/login',
+			  passport.authenticate('basic', { successRedirect: '/',
 			                                   failureRedirect: '/login'}) //,
 			                                  // failureFlash: true })
-			);
+			); */
 	// =====================================
 	// SIGNUP ==============================
 	// =====================================
@@ -67,9 +67,9 @@ module.exports = function(app, passport) {
 	app.get('/signup', signup.signup);
 	app.post('/signup', function(req,res) {
 	    Account.register(new Account({ 
-	    	email : req.body.email,
+	    	username : req.body.email,
 	    	fullname : req.body.fullname,
-	    	username : req.body.handle,
+	    	handle   : req.body.handle,
 	    	avatar : req.body.avatar,
 	    	homepage : req.body.homepage
 	    	}), req.body.password, function(err, account) {
@@ -78,7 +78,7 @@ module.exports = function(app, passport) {
 	            return res.render('signup', { account : account });
 	        }
 
-	        passport.authenticate('local')(req, res, function () {
+	        passport.authenticate('basic')(req, res, function () {
 	          res.redirect('/');
 	        });
 	    });

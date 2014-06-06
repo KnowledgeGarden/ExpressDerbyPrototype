@@ -32,18 +32,18 @@ var express = require('express')
 var connect = require('connect');
 var passport = require('passport')
 	, Account = require('./apps/models/account')
-    , LocalStrategy = require('passport-local').Strategy;
-passport.use(new LocalStrategy(function(email,password,done){
-    console.log(email+"//"+password+" is trying to login as local.");
-    Account.findOne({'email':email})
+    , BasicStrategy = require('passport-http').BasicStrategy;
+passport.use(new BasicStrategy(function(username,password,done){
+    console.log(username+"//"+password+" is trying to login as local.");
+    Account.findOne({'username':username})
         .exec(function(err,puser){
             if(err){log.info(err.stack);}
             if(!puser){
-                log.info("user not found.");
+            	console.log("user not found.");
                 return done(null, false, { message: 'Unknown user ' + username });
             }
             if (password!==puser.password) {
-                log.info("password invalid.");
+            	console.log("password invalid.");
                 return done(null, false, { message: 'Invalid password' });
             }
             return done(null, puser);

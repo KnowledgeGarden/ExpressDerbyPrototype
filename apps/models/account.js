@@ -14,10 +14,10 @@ var mongoose = require('mongoose')
 var Account = new Schema({
 
     local            : {
-        email        : String,
+        username     : String, //actually email
         password     : String,
         fullname	 : String,
-        username		 : String,
+        handle  	 : String,
         avatar		 : String,
         homepage	 : String,
         credentials  : Array
