@@ -47,22 +47,6 @@ module.exports = function(app, passport) {
 	// show the login form
 	app.get('/login', login.login);
 	// process the login form
-	passport.use(new LocalStrategy(function(email,password,done){
-        console.log(email+"//"+password+" is trying to login as local.");
-        Account.findOne({'email':email})
-            .exec(function(err,puser){
-                if(err){log.info(err.stack);}
-                if(!puser){
-                    log.info("user not found.");
-                    return done(null, false, { message: 'Unknown user ' + username });
-                }
-                if (password!==puser.password) {
-                    log.info("password invalid.");
-                    return done(null, false, { message: 'Invalid password' });
-                }
-                return done(null, puser);
-        });
-    }));
 //	app.post('/login', passport.authenticate('local'), function(req, res) {
 //		if (err) {
 //			console.log("LOGIN ERR: "+err);

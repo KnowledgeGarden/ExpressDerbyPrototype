@@ -31,7 +31,25 @@ var express = require('express')
 
 var connect = require('connect');
 var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+	, Account = require('./apps/models/account')
+    , LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(function(email,password,done){
+    console.log(email+"//"+password+" is trying to login as local.");
+    Account.findOne({'email':email})
+        .exec(function(err,puser){
+            if(err){log.info(err.stack);}
+            if(!puser){
+                log.info("user not found.");
+                return done(null, false, { message: 'Unknown user ' + username });
+            }
+            if (password!==puser.password) {
+                log.info("password invalid.");
+                return done(null, false, { message: 'Invalid password' });
+            }
+            return done(null, puser);
+    });
+}));
+
 /////////////
 // The Express App
 /////////////
