@@ -2,26 +2,57 @@
  * UserDataProvider
  */
 var mongoDB,
-	myCollection;
-var ReturnObject = require('./returnobject');
+	userCollection;
+//var ReturnObject = require('./returnobject');
 var User = require('./user');
 
 var UserDataProvider = module.exports = {
 		//called from server.js
 	    init: function(mongo, collection) {
 	        	mongoDB = mongo;
-	        	myCollection = collection;
+	        	userCollection = collection;
 	        	console.log('Initializing UserDataProvider '+mongoDB);
 		},
-		authenticate: function(usrname, password) {
-			var result = new ReturnObject();
-			myCollection.find({$and:[{username:username}, {pwd:password}]}, function(err,doc) {
-				if (doc) 
-					result.setObject(doc);
-				else
-					result.addErrorString(err.toString());
+		//////////////////////////////////////////////
+		// User data
+		// NOTE: <code>username</code> is the primary key for all users
+		//////////////////////////////////////////////
+		/**
+		 * 
+		 * @param usrname
+		 * @param password
+		 * @param callback: signature (err,data)
+		 * @returns {ReturnObject}
+		 */
+		authenticate: function(usrname, password, callback) {
+			userCollection.find({$and:[{username:username}, {pwd:password}]}, function(err,doc) {
+				console.log('UserDataProvider.authenticate '+username+' '+err+' | '+doc);
+				callback(err,doc);
 			});
-			return result;
 
+		},
+		newUser: function(username, password, /*todo*/ callback) {
+			
+		},
+		removeUser: function(username, callback) {
+			
+		},
+		updateUser: function(username, updateString, callback) {
+			
+		},
+		//////////////////////////////////////////////
+		// Invitation list
+		//////////////////////////////////////////////
+		addInvitation: function(email, callback) {
+			
+		},
+		getInvitation: function(email, callback) {
+			
+		},
+		removeInvitation: function(email,callback) {
+			
+		},
+		isInvited: function(email,callback) {
+			
 		}
 }

@@ -3,7 +3,7 @@
  * BookmarkModel
  */
 
-var ReturnObject = require('./returnobject');
+//var ReturnObject = require('./returnobject');
 
 var dataProvider;
 
@@ -13,14 +13,19 @@ var dataProvider;
 	   * Fetch a <em>SubjectProxy</em> for the topic which
 	   * represents a website at the given <code>url</code>
 	   * @param url
-	   * @returns
+	   * @param title
+	   * @param callback: signature (err,data)
 	   */
-	getBookmarklet: function(url) {
-		console.log('GETTING: '+url);
-		var result = dataProvider.findProxyByURL(url);
-		if (result)
-			console.log('GOT: '+result.getObject()+' | '+result.hasError()+' | '+result.getErrorString());
-		return result;
+	getBookmarklet: function(url, title, callback) {
+		console.log('GETTING: '+url+' '+callback);
+		if (!url) 
+			callback('BookmarkModel.getBookmarklet missing URL', null);
+		else {
+			dataProvider.findProxyByURL(url, function(err,data) {
+				console.log('BookmarkModel.getBookmarklet: '+err+' | '+data);
+				callback(err,data);
+			});
+		}
 	},
 
 	/**
@@ -28,8 +33,9 @@ var dataProvider;
 	 * <em>saved</em>, the form's data <code>queryString</code> is
 	 * sent here.</p>
 	 * @param queryString
+	 * @param callback: signature (err,data)
 	 */
-	postBookmarklet: function(queryString) {
+	postBookmarklet: function(queryString, callback) {
 		console.log('POSTING: '+queryString);
 	},
 	//called from server.js

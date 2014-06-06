@@ -1,51 +1,80 @@
+/**
+ * Server: the program's entry point
+ */
 var express = require('express')
+  //routes
   , home  = require('./routes')
   , admin = require('./routes/admin')
   , user  = require('./routes/user')
   , bkmrk = require('./routes/bkmrk')
+  //stuff
   , http  = require('http')
   , path  = require('path')
-  , mongo = require("mongojs");
+  //database
+//  , mongoDB = require('./lib/mongodb')
+  , mongoose = require('mongoose')
+  //data providers
+  , dataProvider = require('./apps/models/dataprovider')
+  , userDataProvider = require('./apps/models/userdataprovider')
+  //models
+  , bkmrkModel = require('./apps/models/bookmarkmodel')
+  , userModel = require('./apps/models/usermodel')
+  , adminModel = require('./apps/models/adminmodel')
+  , tagModel = require('./apps/models/tagmodel');
+
 //NOTE: we can add username/password to this
 //@see http://docs.mongodb.org/manual/reference/connection-string/
-var connectionString = 'mongodb:localhost:27017';
+//Two collections (for now): proxies and users
+//var proxyCollection = mongoDB.collection('proxies');
+//var userCollection = mongoDB.collection('users');
 
-var collection_name = 'expressderbycollection';
-var mongoDB = mongo(connectionString, [collection_name]);
-var myCollection = mongoDB.collection(collection_name);
-//data providers
-var dataProvider = require('./apps/models/dataprovider');
-var userDataProvider = require('./apps/models/userdataprovider');
-//models
-var bkmrkModel = require('./apps/models/bookmarkmodel');
-var userModel = require('./apps/models/usermodel');
-var adminModel = require('./apps/models/adminmodel');
-var tagModel = require('./apps/models/tagmodel');
 
-var app = express();
+var connect = require('connect');
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+/////////////
+// The Express App
+/////////////
+var app = express()
+	, bodyParser = require('body-parser')
+	, cookieParser = require('cookie-parser')
+	, flash 	 = require('connect-flash')
+	, logger = require('logger').createLogger('development.log');
 var exphbs = require('express3-handlebars');
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
-
+//app.use(logger); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth) https://github.com/expressjs/cookie-parser
+app.use(bodyParser()); // get information from html forms https://github.com/expressjs/body-parser
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'public')));
+//required for passport
+//app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
-
-app.get('/', home.index);  	//look for index.handlebars
+//var routes = require('./routes/routes');
+require('./routes/routes.js')(app, passport);
+/*app.get('/', home.index);  	//look for index.handlebars
 app.get('/admin', admin.admin); //look for admin.handlebars
 app.get('/bkmrk', bkmrk.bkmrk); //look for bkmrk.handlebars
 //TODO we can add plugin views here
 app.get('/users', user.list);
+*/
+
+//start mongoose
+mongoose.connect('mongodb://127.0.0.1:27017/userdb');
 
 //initialize the models
-dataProvider.init(mongoDB,myCollection);
-bkmrkModel.init(dataProvider);
-userDataProvider.init(mongoDB,myCollection);
-userModel.init(userDataProvider);
-adminModel.init(userDataProvider);
-tagModel.init(dataProvider);
+//dataProvider.init(mongoDB,proxyCollection);
+//bkmrkModel.init(dataProvider);
+//userDataProvider.init(mongoDB,userCollection);
+//userModel.init(userDataProvider);
+//adminModel.init(userDataProvider);
+//tagModel.init(dataProvider);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

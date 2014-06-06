@@ -1,44 +1,77 @@
 /**
- * New node file
+ * DataProvider
+ * The primary database API for all topics 
  */
 var mongoDB,
-	myCollection;
-var ReturnObject = require('./returnobject');
+	proxyCollection;
+//var ReturnObject = require('./returnobject');
 var SubjectProxy = require('./subjectproxy');
 
 var DataProvider = module.exports = {
 		//called from server.js
 	    init: function(mongo, collection) {
 	        	mongoDB = mongo;
-	        	myCollection = collection;
-	        	console.log('Initializing DataProvider '+mongoDB);
+	        	proxyCollection = collection;
+	        	console.log('Initializing DataProvider '+mongoDB+' '+proxyCollection);
 		},
-		getProxy: function(lox, credentials) {
-			var result = new ReturnObject();
-			myCollection.find({locator:lox}, function(err,doc) {
-				if (doc) {
-					//TODO check credentials
-					result.setObject(doc);
-				} else
-					result.addErrorString(err.toString());
+		/**
+		 * Fetch a proxy identified by 'locator'=<code>lox</code>
+		 * @param lox
+		 * @param credentials: Ticket
+		 * @param callback: signature (err,data)
+		 */
+		getProxy: function(lox, credentials, callback) {
+			console.log('DataProvider.getProxy- '+lox);
+			proxyCollection.find({locator:lox}, function(err,doc) {
+				console.log('DataProvider.getProxy-1 '+doc+' | '+err);
+				//TODO deal with credentials
+				callback(err,doc);
 			});
-			return result;
 		},
-		putProxy: function(proxy) {
-			var result = new ReturnObject();
-			//TODO error callback
-			myCollection.save(proxy.toJSON());
-			return result;
-		},
-		findProxyByURL: function(url) {
-			var result = new ReturnObject();
-			myCollection.find({url:url}, function(err,doc) {
-				if (doc) 
-					result.setObject(doc);
-				else
-					result.addErrorString(err.toString());
+		/**
+		 * Save a proxy; Note: changes to a proxy require updateProxy
+		 * @param proxy
+		 * @param callback: signature (err,data)
+		 */
+		putProxy: function(proxy, callback) {
+			proxyCollection.insert(proxy.toJSON(), function(err, saved) {
+				console.log('DataProvider.putProxy '+err+' | '+saved);
+				callback(err,saved);
 			});
-			return result;
+			//return result;
+		},
+		/**
+		 * Update a proxy
+		 * @param lox
+		 * @param credentials: Ticket
+		 * @param updateString: JSON string or key/value pairs to update
+		 * @param callback: signature (err,data)
+		 * @returns
+		 */
+		updateProxy: function(lox, credentials, updateString, callback) {
+			proxyCollection.update(lox, updateString, function(err, result) {
+				console.log('DataProvider.updateProxy '+err+' | '+result);
+				callback(err,result);
+			});
+		},
+		/**
+		 * Find a proxy by the <code>URL</code> it represents
+		 * @param url
+		 * @param credentials: Ticket
+		 * @param callback: signature (err,data)
+		 * @returns
+		 */
+		findProxyByURL: function(url, credentials, callback) {
+			if (!url)
+				callback('DataProvider.findProxyByURL missing URL', null);
+			else {
+				proxyCollection.find({url:url}, function(err,doc) {
+
+				console.log('DataProvider.findProxyByURL '+err+' | '+doc);
+				//TODO deal with credentials
+				callback(err,doc);
+				});
+			}
 		}
 		
 }

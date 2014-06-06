@@ -127,7 +127,7 @@ SubjectProxy.prototype.getResourceUrl = function() {
 };
 
 SubjectProxy.prototype.toJSON = function() {
-	return JSON.stringify(this.properties);
+	  return JSON.stringify(properties);
 };
 
 module.exports = SubjectProxy;
