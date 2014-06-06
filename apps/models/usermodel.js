@@ -1,6 +1,7 @@
 /**
  * UserModel
  * The primary database API for all User data
+ * TODO: modify to use account.js as the User object itself
  */
 var userDataProvider;
 var userCollection;

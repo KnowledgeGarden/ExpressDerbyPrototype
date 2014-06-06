@@ -1,6 +1,7 @@
 /**
  * DataProvider
  * The primary database API for all topics 
+ * TODO: modify to work with mongoose
  */
 var mongoDB,
 	proxyCollection;

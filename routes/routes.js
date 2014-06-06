@@ -8,9 +8,10 @@
 	    user  = require('./user'),
 	    bkmrk = require('./bkmrk'),
 	    login = require('./login'),
-	    signup = require('./signup');
+	    signup = require('./signup'),
+	    mongoose = require('mongoose');
 var passport = require('passport')
-	, Account = require('../apps/models/account')
+	, User = require('../apps/models/account')
 	, LocalStrategy = require('passport-local').Strategy;
 	
 //	var url = require('url');
@@ -47,39 +48,72 @@ module.exports = function(app, passport) {
 	// show the login form
 	app.get('/login', login.login);
 	// process the login form
-	app.post('/login', passport.authenticate('local'), function(req, res) {
+	/*app.post('/login', passport.authenticate('local'), function(req, res) {
 			res.redirect('/');
-	}); 
+	}); */ 
 	
-/*	app.post('/login',
-			  passport.authenticate('basic', { successRedirect: '/',
-			                                   failureRedirect: '/login'}) //,
+	/*app.post('/login',
+			  passport.authenticate('local', { successRedirect: '/',
+			                                   failureRedirect: '/foo'}) //,
 			                                  // failureFlash: true })
 			); */
+	app.post('/login', function(req, res, next) {
+		console.log('Login: '+req.body.username);
+		  passport.authenticate('local', function(err, user, info) {
+			  console.log('Login2: '+err+' '+user+' '+info);
+		    if (err) { return next(err); }
+		    if (!user) {
+		      //req.session.messages =  [info.message];
+		      return res.redirect('/foo');   //TODO
+		    }
+		    req.logIn(user, function(err) {
+		      if (err) { return next(err); }
+		      return res.redirect('/');
+		    });
+		  })(req, res, next);
+		});
 	// =====================================
 	// SIGNUP ==============================
 	// =====================================
 	// show the signup form
 	app.get('/signup', signup.signup);
 	app.post('/signup', function(req,res) {
-	    Account.register(new Account({ 
-	    	username : req.body.email,
+		console.log(req.body.email+' | '+
+					req.body.fullname+' | '+
+					req.body.handle+' | '+
+					req.body.avatar+' | '+
+					req.body.homepage+' | '+
+					req.body.password);
+		//zzz | Zaza | zippie | MyZippie | http://google.com/ | zzz
+		var user = new User({ 
+	    	username : req.body.email, //Note: using email as username
 	    	fullname : req.body.fullname,
 	    	handle   : req.body.handle,
 	    	avatar : req.body.avatar,
 	    	homepage : req.body.homepage,
 	    	password : req.body.password //TODO storing raw password
-	    	}), req.body.password, function(err, account) {
-    			console.log("routes.signup "+err);
-	        	if (err) {
-	        		return res.render('signup', { account : account });
-	        	}
-
-	      //  passport.authenticate('local')(req, res, function () {
-	          res.redirect('/');
-	       // });
-	    });
-		
+	    	});
+		console.log('Saving '+user+' '+user.homepage);
+		user.save(function(err) {
+			  if(err) {
+			    console.log(err);
+			  } else {
+			    console.log('User: ' + user.username + " saved.");
+			  }
+			});
+		/*
+		 { _id: 539231af1918a0640f486fc7,
+			  username: 'ppp@ppp.com',
+			  fullname: 'Pepe Jones',
+			  handle: 'pepe',
+			  avatar: 'pepe',
+			  homepage: 'http://google.com/',
+			  password: '$2a$10$Jph6rTmTM/w7J7NLV0IB5.9E/9ajuQv.UBlcxBOWoT0HLcsR5TNJW',
+			  __v: 0,
+			  credentials: [] }
+		 */
+		//There is sound evidence that user is being saved.
+		// Do not see 		
 	});
 /**
  Express server listening on port 3000

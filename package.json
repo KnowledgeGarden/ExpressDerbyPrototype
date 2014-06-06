@@ -25,6 +25,7 @@
     "logger": "0.0.1",
     "connect-flash": "~0.1.1",
     "passport-local-mongoose": "~0.3.0",
-    "passport-http": "~0.2.2"
+    "passport-http": "~0.2.2",
+    "bcryptjs": "~0.7.12"
   }
 }

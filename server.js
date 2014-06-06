@@ -30,26 +30,31 @@ var express = require('express')
 
 
 var connect = require('connect');
+
+//start mongoose  might want to put a password here
+mongoose.connect('mongodb://127.0.0.1:27017/userdb');
+
 var passport = require('passport')
-	, Account = require('./apps/models/account').Strategy
-	, LocalStrategy = require('passport-local');
+	, User = require('./apps/models/account')
+	, LocalStrategy = require('passport-local').Strategy;
    // , BasicStrategy = require('passport-http').BasicStrategy;
-passport.use(new LocalStrategy(function(username,password,done){
+
+passport.use(new LocalStrategy(function(username,password,done) {
     console.log(username+"//"+password+" is trying to login as local.");
-    Account.findOne({'username':username})
-        .exec(function(err,puser){
-            if(err){log.info(err.stack);}
+	//var User = mongoose.model('User');
+    User.findOne({'username':username}, function(err,puser) {
+            console.log(err+' | '+puser);
             if(!puser){
             	console.log("user not found.");
                 return done(null, false, { message: 'Unknown user ' + username });
             }
             console.log(puser);
             console.log(puser.username+' '+puser.password);
-            Account.comparePassword(password, function(err, isMatch) {
+            puser.comparePassword(password, function(err, isMatch) {
             	console.log('A '+err);
                 if (err) return done(err);
                 if(isMatch) {
-                  return done(null, Account);
+                  return done(null, User);
                 } else {
                   return done(null, false, { message: 'Invalid password' });
                 }
@@ -61,7 +66,26 @@ passport.use(new LocalStrategy(function(username,password,done){
             return done(null, puser);
     });
 }));
+passport.serializeUser(function(user, done) {
+	console.log('serializeUser '+user);
+    done(null, user.id);
+});
 
+
+passport.deserializeUser(function(id, done) {
+	console.log('deserializeUsesr '+id);
+    User.findById(id,function(err,user){
+        if(err) done(err);
+        if(user){
+            done(null,user);
+        }else{
+            User.findById(id, function(err,user){
+                if(err) done(err);
+                done(null,user);
+            });
+        }
+    });
+});
 /////////////
 // The Express App
 /////////////
@@ -95,8 +119,6 @@ app.get('/bkmrk', bkmrk.bkmrk); //look for bkmrk.handlebars
 app.get('/users', user.list);
 */
 
-//start mongoose
-mongoose.connect('mongodb://127.0.0.1:27017/userdb');
 
 //initialize the models
 //dataProvider.init(mongoDB,proxyCollection);

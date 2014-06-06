@@ -2,6 +2,7 @@
  * SubjectProxy
  * <p>A class which serves the purpose of <em>knowledge representation</em>; each
  * instance is a representation of, a proxy for a <em>subject</em></p>
+ * TODO modify to work with mongoose
  */
 function SubjectProxy() {
 	this.properties = {};
