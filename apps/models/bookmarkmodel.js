@@ -1,10 +1,6 @@
-
 /**
  * BookmarkModel
  */
-
-//var ReturnObject = require('./returnobject');
-
 var dataProvider;
 
   var BookmarkModel = module.exports = {
@@ -14,14 +10,15 @@ var dataProvider;
 	   * represents a website at the given <code>url</code>
 	   * @param url
 	   * @param title
+	   * @param credentials: Ticket--> []
 	   * @param callback: signature (err,data)
 	   */
-	getBookmarklet: function(url, title, callback) {
+	getBookmarklet: function(url, title, credentials, callback) {
 		console.log('GETTING: '+url+' '+callback);
 		if (!url) 
 			callback('BookmarkModel.getBookmarklet missing URL', null);
 		else {
-			dataProvider.findProxyByURL(url, function(err,data) {
+			dataProvider.findNodeByURL(url, credentials, function(err,data) {
 				console.log('BookmarkModel.getBookmarklet: '+err+' | '+data);
 				callback(err,data);
 			});
@@ -48,4 +45,3 @@ var dataProvider;
 
   };
   
-

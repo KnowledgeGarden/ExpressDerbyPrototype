@@ -24,6 +24,10 @@
     "logger": "0.0.1",
     "connect-flash": "~0.1.1",
     "passport-local-mongoose": "~0.3.0",
-    "bcryptjs": "~0.7.12"
+    "bcryptjs": "~0.7.12",
+    "es": "~0.4.4",
+    "stringbuilder": "0.0.10",
+    "node-uuid": "~1.4.1",
+    "dateformat": "~1.0.8-1.2.3"
   }
 }

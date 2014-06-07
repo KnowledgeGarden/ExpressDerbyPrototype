@@ -14,8 +14,9 @@ exports.bkmrk = function(req, res){
 	var q = req.query;
 	var url = q.url;
 	var title = q.title;
+	var credentials = [];
 console.log('Routes/bkmrk '+url+' | '+title);
-	bookmark.getBookmarklet(url,title, function(err,data) {
+	bookmark.getBookmarklet(url,title, credentials, function(err,data) {
 		console.log('routes.bkmark got '+err+' | '+data);
 	});
 	//TODO this must be inside the callback

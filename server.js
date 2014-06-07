@@ -14,21 +14,23 @@ var express = require('express')
 //  , mongoDB = require('./lib/mongodb')
   , mongoose = require('mongoose')
   //data providers
-  , dataProvider = require('./apps/models/dataprovider')
-  , userDataProvider = require('./apps/models/userdataprovider')
+  //, dataProvider = require('./apps/models/dataprovider')
+ // , userDataProvider = require('./apps/models/userdataprovider')
   //models
   , bkmrkModel = require('./apps/models/bookmarkmodel')
-  , userModel = require('./apps/models/usermodel')
-  , adminModel = require('./apps/models/adminmodel')
-  , tagModel = require('./apps/models/tagmodel');
-
+//  , userModel = require('./apps/models/usermodel')
+//  , adminModel = require('./apps/models/adminmodel')
+//  , tagModel = require('./apps/models/tagmodel')
+  , env = require('tq-topicmap');
+var TopicMapEnvironment = env;
 //NOTE: we can add username/password to this
 //@see http://docs.mongodb.org/manual/reference/connection-string/
 //Two collections (for now): proxies and users
 //var proxyCollection = mongoDB.collection('proxies');
 //var userCollection = mongoDB.collection('users');
 
-
+var DataProvider = TopicMapEnvironment.getDataProvider();
+console.log("ABC "+DataProvider);
 var connect = require('connect');
 
 //start mongoose  might want to put a password here
@@ -122,7 +124,7 @@ app.get('/users', user.list);
 
 //initialize the models
 //dataProvider.init(mongoDB,proxyCollection);
-//bkmrkModel.init(dataProvider);
+bkmrkModel.init(DataProvider);
 //userDataProvider.init(mongoDB,userCollection);
 //userModel.init(userDataProvider);
 //adminModel.init(userDataProvider);
